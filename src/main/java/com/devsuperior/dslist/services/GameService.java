@@ -3,6 +3,7 @@ package com.devsuperior.dslist.services;
 import java.util.List;
 
 import com.devsuperior.dslist.dto.GameDTO;
+import com.devsuperior.dslist.projections.GameMinProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,11 @@ public class GameService {
     public GameDTO findById(Long gameId) {
         Game result = gameRepository.findById(gameId).get();
         return new GameDTO(result);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByList(Long listId) {
+        List<GameMinProjection> gamesList = gameRepository.searchByList(listId);
+        return gamesList.stream().map(x -> new GameMinDTO(x)).toList();
     }
 }
